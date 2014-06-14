@@ -44,19 +44,6 @@ jQuery(document).ready(function($) {
 
   moment.lang(lang);
 
-  //connect do Xbee monitor
-  var socket = io.connect('http://rpi-development.local:8080');
-  socket.on('dishwasher', function (dishwasherReady) {
-    if (dishwasherReady) {
-      $('.dishwasher').fadeIn(2000);
-      $('.lower-third').fadeOut(2000);
-    } else {
-      $('.dishwasher').fadeOut(2000);
-      $('.lower-third').fadeIn(2000);
-    }
-  });
-
-
   (function updateTime() {
      var now = moment();
      var date = now.format('LLLL').split(' ',4);

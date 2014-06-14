@@ -133,12 +133,12 @@ body, html {
   margin-right: 10px;
 }
 
-.time .sec {
-  font-size: 25px;
+.time .ampm {
+  font-size: 45px;
   color: #666;
   padding-left: 5px;
   position: relative;
-  top: -35px;
+  /* top: -35px; */
 }
 
 .forecast-table {

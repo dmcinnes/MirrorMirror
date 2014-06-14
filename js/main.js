@@ -58,22 +58,6 @@ jQuery(document).ready(function($) {
    })();
 
 
-   (function updateCompliment() {
-      //see compliments.js
-      while (compliment == lastCompliment) {
-        compliment = Math.floor(Math.random()*compliments.length);
-      }
-
-      $('.compliment').updateWithText(compliments[compliment], 4000);
-
-      lastCompliment = compliment;
-
-      setTimeout(function() {
-        updateCompliment(true);
-      }, 30000);
-
-    })();
-
     (function updateCurrentWeather() {
        var iconTable = {
          '01d':'wi-day-sunny',
@@ -171,33 +155,6 @@ jQuery(document).ready(function($) {
         setTimeout(function() {
           updateWeatherForecast();
         }, 60000);
-      })();
-
-      (function fetchNews() {
-        $.feedToJson({
-          feed:'https://news.google.com/news/feeds?pz=1&cf=all&ned=us&hl=en&topic=t&output=rss',
-          success: function(data){
-            news = [];
-            for (var i in data.item) {
-              var item = data.item[i];
-              news.push(item.title);
-            }
-          }
-        });
-        setTimeout(function() {
-          fetchNews();
-        }, 60000);
-      })();
-
-      (function showNews() {
-        var newsItem = news[newsIndex];
-        $('.news').updateWithText(newsItem,2000);
-
-        newsIndex--;
-        if (newsIndex < 0) newsIndex = news.length - 1;
-        setTimeout(function() {
-          showNews();
-        }, 5500);
       })();
 
 });

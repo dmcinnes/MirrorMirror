@@ -9,15 +9,3 @@ var weatherParams = {
     'units':'imperial',
     'lang':lang
 };
-
-// compliments:
-var compliments = [
-            'Hey, handsome!',
-            'Hi, sexy!',
-            'Hello, beauty!',
-            'You look sexy!',
-            'Wow, you look hot!',
-            'Looking good today!',
-            'You look nice!',
-            'Enjoy your day!'
-        ];

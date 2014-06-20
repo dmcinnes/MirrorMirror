@@ -18,17 +18,6 @@ $(function () {
     return Math.round(temp * 10) / 10;
   };
 
-  var kmh2beaufort = function (kmh) {
-    var speeds = [1, 5, 11, 19, 28, 38, 49, 61, 74, 88, 102, 117, 1000];
-    for (var beaufort in speeds) {
-      var speed = speeds[beaufort];
-      if (speed > kmh) {
-        return beaufort;
-      }
-    }
-    return 12;
-  };
-
   var iconTable = {
     'clear-day':           'wi-day-sunny',
     'clear-night':         'wi-night-clear',
@@ -45,6 +34,17 @@ $(function () {
     'tornado':             'wi-tornado'
   };
 
+  var bearingIcons = [
+    'wi-wind-north',
+    'wi-wind-north-east',
+    'wi-wind-east',
+    'wi-wind-south-east',
+    'wi-wind-south',
+    'wi-wind-south-west',
+    'wi-wind-west',
+    'wi-wind-north-west'
+  ];
+
   var renderWeather = function (currentWeather) {
     var temp = roundVal(currentWeather.temperature);
 
@@ -54,8 +54,19 @@ $(function () {
     var icon = $('<span/>').addClass('icon dimmed wi').addClass(iconClass);
     $('.temp').updateWithText(icon.outerHTML()+temp+'&deg;', 1000);
 
-    var windString = '<span class="wi wi-strong-wind xdimmed"></span> ' + kmh2beaufort(wind) ;
-    $('.windsun').updateWithText(windString, 1000);
+    var bearingIcon = '';
+    var bearing = currentWeather.windBearing;
+    if (bearing !== undefined) {
+      bearing -= 45;
+      if (bearing < 0) {
+        bearing += 360;
+      }
+      var bearingIndex = Math.round(bearing / 45);
+      bearingIcon = $('<span/>').addClass('xdimmed wi').addClass(bearingIcons[bearingIndex]);
+    }
+
+    var windString = '<span class="wi wi-strong-wind xdimmed"></span> ' + wind + ' ' + bearingIcon.outerHTML();
+    $('.wind').updateWithText(windString, 1000);
   };
 
   var renderForecast = function (json) {

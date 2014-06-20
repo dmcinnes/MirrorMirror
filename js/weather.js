@@ -1,5 +1,19 @@
 $(function () {
 
+  var geoLocationOptions = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+  };
+
+  var getLocation = function () {
+    var deferred = jQuery.Deferred();
+    navigator.geolocation.getCurrentPosition(
+      deferred.resolve, deferred.reject, geoLocationOptions);
+
+    return deferred.promise();
+  };
+
   var roundVal = function (temp) {
     return Math.round(temp * 10) / 10;
   };
@@ -98,36 +112,30 @@ $(function () {
     $('.forecast').updateWithText(forecastTable, 1000);
   };
 
-  (function updateCurrentWeather() {
-    if (localStorage.weather) {
-      renderWeather(JSON.parse(localStorage.weather));
-    } else {
-      $.getJSON('http://api.openweathermap.org/data/2.5/weather', weatherParams, function(json, textStatus) {
-        localStorage.weather = JSON.stringify(json);
-        renderWeather(json);
-      });
-    }
-
-    setTimeout(function() {
-      delete localStorage.weather;
-      updateCurrentWeather();
-    }, 60000);
-  })();
-
-  (function updateWeatherForecast() {
+  var updateWeatherForecast = function () {
     if (localStorage.forecast) {
-      renderForecast(JSON.parse(localStorage.forecast));
+      // renderForecast(JSON.parse(localStorage.forecast));
     } else {
-      $.getJSON('http://api.openweathermap.org/data/2.5/forecast', weatherParams, function(json, textStatus) {
+
+      getLocation().fail(function (err) {
+        console.log('getLocation fail', err);
+      }).then(function (location) {
+        var coords = location.coords;
+        var url = 'https://api.forecast.io/forecast/'+APIKEY+'/'+coords.latitude+','+coords.longitude+'?callback=?';
+        return $.getJSON(url, weatherParams);
+      }).done(function (json, textStatus) {
         localStorage.forecast = JSON.stringify(json);
-        renderForecast(json);
+        // renderForecast(json);
+        console.log(json);
       });
     }
 
-    setTimeout(function() {
-      delete localStorage.forecast;
-      updateWeatherForecast();
-    }, 60000);
-  })();
+  };
 
+  updateWeatherForecast();
+
+  setTimeout(function () {
+    delete localStorage.forecast;
+    updateWeatherForecast();
+  }, 360000);
 });

@@ -30,48 +30,32 @@ $(function () {
   };
 
   var iconTable = {
-    '01d':'wi-day-sunny',
-    '02d':'wi-day-cloudy',
-    '03d':'wi-cloudy',
-    '04d':'wi-cloudy-windy',
-    '09d':'wi-showers',
-    '10d':'wi-rain',
-    '11d':'wi-thunderstorm',
-    '13d':'wi-snow',
-    '50d':'wi-fog',
-    '01n':'wi-night-clear',
-    '02n':'wi-night-cloudy',
-    '03n':'wi-night-cloudy',
-    '04n':'wi-night-cloudy',
-    '09n':'wi-night-showers',
-    '10n':'wi-night-rain',
-    '11n':'wi-night-thunderstorm',
-    '13n':'wi-night-snow',
-    '50n':'wi-night-alt-cloudy-windy'
+    'clear-day':           'wi-day-sunny',
+    'clear-night':         'wi-night-clear',
+    'rain':                'wi-rain',
+    'snow':                'wi-snow',
+    'sleet':               'wi-rain-mix',
+    'wind':                'wi-cloudy-gusts',
+    'fog':                 'wi-fog',
+    'cloudy':              'wi-cloudy',
+    'partly-cloudy-day':   'wi-day-cloudy',
+    'partly-cloudy-night': 'wi-night-cloudy',
+    'hail':                'wi-hail',
+    'thunderstorm':        'wi-thunderstorm',
+    'tornado':             'wi-tornado'
   };
 
-  var renderWeather = function (json) {
-    var temp = roundVal(json.main.temp);
-    var temp_min = roundVal(json.main.temp_min);
-    var temp_max = roundVal(json.main.temp_max);
+  var renderWeather = function (currentWeather) {
+    var temp = roundVal(currentWeather.temperature);
 
-    var wind = roundVal(json.wind.speed);
+    var wind = roundVal(currentWeather.windSpeed);
 
-    var iconClass = iconTable[json.weather[0].icon];
-    var icon = $('<span/>').addClass('icon').addClass('dimmed').addClass('wi').addClass(iconClass);
+    var iconClass = iconTable[currentWeather.icon];
+    var icon = $('<span/>').addClass('icon dimmed wi').addClass(iconClass);
     $('.temp').updateWithText(icon.outerHTML()+temp+'&deg;', 1000);
 
-    var now = new Date();
-    var sunrise = new Date(json.sys.sunrise*1000).toTimeString().substring(0,5);
-    var sunset = new Date(json.sys.sunset*1000).toTimeString().substring(0,5);
-
     var windString = '<span class="wi wi-strong-wind xdimmed"></span> ' + kmh2beaufort(wind) ;
-    var sunString = '<span class="wi wi-sunrise xdimmed"></span> ' + sunrise;
-    if (json.sys.sunrise*1000 < now && json.sys.sunset*1000 > now) {
-      sunString = '<span class="wi wi-sunset xdimmed"></span> ' + sunset;
-    }
-
-    $('.windsun').updateWithText(windString+' '+sunString, 1000);
+    $('.windsun').updateWithText(windString, 1000);
   };
 
   var renderForecast = function (json) {
@@ -122,30 +106,27 @@ $(function () {
 
     var url = 'https://api.forecast.io/forecast/'+APIKEY+'/'+lat+','+long+'?callback=?';
     var ajax = $.getJSON(url, weatherParams);
-    ajax.done(function (data) {
+    ajax.done(function (weatherData) {
       // cache the response
-      localStorage.forecast = JSON.stringify(data);
+      localStorage.forecast = JSON.stringify(weatherData);
     });
     return ajax;
   };
 
-  var updateWeatherForecast = function () {
+  var updateWeather = function () {
     getLocation().then(function (location) {
       var coords = location.coords;
       return getWeatherData(coords.latitude, coords.longitude);
-    }).done(function (data) {
-      localStorage.forecast = JSON.stringify(data);
-      // renderForecast(json);
-      console.log(data);
+    }).done(function (weatherData) {
+      renderWeather(weatherData.currently);
     });
-
   };
 
-  updateWeatherForecast();
+  updateWeather();
 
   setTimeout(function () {
     // clear the cache
     delete localStorage.forecast;
-    updateWeatherForecast();
+    updateWeather();
   }, 360000);
 });

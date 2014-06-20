@@ -8,10 +8,16 @@ $(function () {
 
   var getLocation = function () {
     var deferred = jQuery.Deferred();
+
     navigator.geolocation.getCurrentPosition(
       deferred.resolve, deferred.reject, geoLocationOptions);
 
-    return deferred.promise();
+    var promise = deferred.promise();
+    promise.fail(function (err) {
+      console.log('getLocation fail', err);
+    });
+
+    return promise;
   };
 
   var roundVal = function (temp) {
@@ -112,29 +118,39 @@ $(function () {
     $('.forecast').updateWithText(forecastTable, 1000);
   };
 
-  var updateWeatherForecast = function () {
+  var getWeatherData = function(lat, long) {
+    // use the cached copy if we have it
     if (localStorage.forecast) {
-      // renderForecast(JSON.parse(localStorage.forecast));
-    } else {
-
-      getLocation().fail(function (err) {
-        console.log('getLocation fail', err);
-      }).then(function (location) {
-        var coords = location.coords;
-        var url = 'https://api.forecast.io/forecast/'+APIKEY+'/'+coords.latitude+','+coords.longitude+'?callback=?';
-        return $.getJSON(url, weatherParams);
-      }).done(function (json, textStatus) {
-        localStorage.forecast = JSON.stringify(json);
-        // renderForecast(json);
-        console.log(json);
-      });
+      var deferred = jQuery.Deferred();
+      deferred.resolve(JSON.parse(localStorage.forecast));
+      return deferred.promise();
     }
+
+    var url = 'https://api.forecast.io/forecast/'+APIKEY+'/'+lat+','+long+'?callback=?';
+    var ajax = $.getJSON(url, weatherParams);
+    ajax.done(function (data) {
+      // cache the response
+      localStorage.forecast = JSON.stringify(data);
+    });
+    return ajax;
+  };
+
+  var updateWeatherForecast = function () {
+    getLocation().then(function (location) {
+      var coords = location.coords;
+      return getWeatherData(coords.latitude, coords.longitude);
+    }).done(function (data) {
+      localStorage.forecast = JSON.stringify(data);
+      // renderForecast(json);
+      console.log(data);
+    });
 
   };
 
   updateWeatherForecast();
 
   setTimeout(function () {
+    // clear the cache
     delete localStorage.forecast;
     updateWeatherForecast();
   }, 360000);

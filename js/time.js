@@ -1,7 +1,5 @@
 $(function() {
 
-  moment.lang(lang);
-
   (function updateTime() {
      var now = moment();
      var date = now.format('LLLL').split(' ',4);

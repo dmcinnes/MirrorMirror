@@ -1,11 +1,5 @@
 $(function () {
 
-  var geoLocationOptions = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0
-  };
-
   var getLocation = function () {
     var deferred = jQuery.Deferred();
 

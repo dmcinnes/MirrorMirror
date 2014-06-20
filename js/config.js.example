@@ -4,3 +4,10 @@ var APIKEY = '<PUT YOUR FORECAST.IO API KEY HERE>';
 // https://developer.forecast.io/docs/v2#options
 var weatherParams = {
 };
+
+// options for browser geolocation lookup
+// https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions
+var geoLocationOptions = {
+  enableHighAccuracy: true,
+  timeout: 5000
+};

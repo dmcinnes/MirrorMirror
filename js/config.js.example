@@ -1,0 +1,6 @@
+var APIKEY = '<PUT YOUR FORECAST.IO API KEY HERE>';
+
+// change forecast.io params here:
+// https://developer.forecast.io/docs/v2#options
+var weatherParams = {
+};

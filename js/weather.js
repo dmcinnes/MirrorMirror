@@ -58,10 +58,7 @@ $(function () {
       var bearingIcon = '';
       var bearing = currentWeather.windBearing;
       if (bearing !== undefined) {
-        bearing -= 45;
-        if (bearing < 0) {
-          bearing += 360;
-        }
+        bearing = (bearing + 22.5) % 360;
         var bearingIndex = Math.round(bearing / 45);
         bearingIcon = $('<span/>').addClass('xdimmed wi').addClass(bearingIcons[bearingIndex]);
       }

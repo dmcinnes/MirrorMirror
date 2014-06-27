@@ -1,4 +1,4 @@
-$(function () {
+var Connection = (function () {
   var socket;
 
   var events = {
@@ -14,8 +14,14 @@ $(function () {
     }
   };
 
+  var commands = {
+    refresh: function () {
+      window.location.reload();
+    }
+  };
+
   var connect = function () {
-    socket = new WebSocket('ws://localhost:8080/');
+    socket = new WebSocket('ws://'+window.location.hostname+':8080/');
     for (var eventName in events) {
       socket[eventName] = events[eventName];
     }
@@ -29,9 +35,10 @@ $(function () {
     }
   }, 1000);
 
-  var commands = {
-    refresh: function () {
-      window.location.reload();
+  return {
+    send: function (command) {
+      console.log('sending "' + command + '"');
+      socket.send(command);
     }
   };
-});
+})();

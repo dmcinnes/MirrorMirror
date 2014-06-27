@@ -8,6 +8,11 @@ var server;
 
 var spawnServer = function () {
   server = spawn('node', ['server.js']);
+  if (debug) {
+    server.stdout.on('data', function (data) {
+      console.log(data.toString().trim());
+    });
+  }
 };
 
 watchr.watch({

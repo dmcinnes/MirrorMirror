@@ -146,20 +146,31 @@ body, html {
   text-align: right;
   font-size: 20px;
   line-height: 20px;
+  margin-top: 10px;
 }
-.forecast-table .day, .forecast-table .temp-min, .forecast-table .temp-max
-{
+
+.forecast-table .day {
+  text-align: left;
   width: 50px;
-  text-align: right;
 }
 
-.forecast-table .temp-max
-{
-  width: 60px;
+.forecast-table .temp-max {
 }
 
-.forecast-table .day
-{
+.forecast-table .temp-min {
+  padding-left: 10px;
+  color: #555;
+}
+
+.forecast-table .day {
+  color: #999;
+}
+
+.forecast-table .today .day {
+  color: white;
+}
+
+.forecast-table .today .temp-min {
   color: #999;
 }
 

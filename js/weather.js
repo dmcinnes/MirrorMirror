@@ -68,41 +68,26 @@ $(function () {
     } else {
       $('.wind').updateWithText('', 1000);
     }
+
+    $('.weather-summary').updateWithText(currentWeather.summary, 1000);
   };
 
-  var renderForecast = function (json) {
-    var forecastData = {};
-
-    for (var i in json.list) {
-      var forecast = json.list[i];
-      var dateKey  = forecast.dt_txt.substring(0, 10);
-
-      if (forecastData[dateKey] === undefined) {
-        forecastData[dateKey] = {
-          'timestamp':forecast.dt * 1000,
-          'temp_min':forecast.main.temp,
-          'temp_max':forecast.main.temp
-        };
-      } else {
-        forecastData[dateKey]['temp_min'] = (forecast.main.temp < forecastData[dateKey]['temp_min']) ? forecast.main.temp : forecastData[dateKey]['temp_min'];
-        forecastData[dateKey]['temp_max'] = (forecast.main.temp > forecastData[dateKey]['temp_max']) ? forecast.main.temp : forecastData[dateKey]['temp_max'];
+  var renderForecast = function (forcast) {
+    var forecastTable = $('<table />').addClass('forecast-table');
+    var weekday = (new Date()).getDay();
+    var days = forcast.data;
+    for (var i = 0; i < days.length; i++) {
+      var day = days[i];
+      var row = $('<tr />');
+      if (i === 0) {
+        row.addClass('today');
       }
 
-    }
-
-    var forecastTable = $('<table />').addClass('forecast-table');
-    var opacity = 1;
-    for (var i in forecastData) {
-      var forecast = forecastData[i];
-      var dt = new Date(forecast.timestamp);
-      var row = $('<tr />').css('opacity', opacity);
-
-      row.append($('<td/>').addClass('day').html(moment.weekdaysShort(dt.getDay())));
-      row.append($('<td/>').addClass('temp-max').html(roundVal(forecast.temp_max)));
-      row.append($('<td/>').addClass('temp-min').html(roundVal(forecast.temp_min)));
-
+      row.append($('<td/>').addClass('day').html(moment.weekdaysShort(weekday)));
+      row.append($('<td/>').addClass('temp-max').html(Math.round(day.temperatureMax)));
+      row.append($('<td/>').addClass('temp-min').html(Math.round(day.temperatureMin)));
       forecastTable.append(row);
-      opacity -= 0.155;
+      weekday = (weekday + 1) % 7;
     }
 
     $('.forecast').updateWithText(forecastTable, 1000);
@@ -131,6 +116,7 @@ $(function () {
       return getWeatherData(coords.latitude, coords.longitude);
     }).done(function (weatherData) {
       renderWeather(weatherData.currently);
+      renderForecast(weatherData.daily);
     });
   };
 

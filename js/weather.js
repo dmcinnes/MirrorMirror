@@ -76,9 +76,10 @@ $(function () {
     var forecastTable = $('<table />').addClass('forecast-table');
     var weekday = (new Date()).getDay();
     var days = forcast.data;
+    var opacity = 1;
     for (var i = 0; i < days.length; i++) {
       var day = days[i];
-      var row = $('<tr />');
+      var row = $('<tr />').css('opacity', opacity);
       if (i === 0) {
         row.addClass('today');
       }
@@ -88,6 +89,7 @@ $(function () {
       row.append($('<td/>').addClass('temp-min').html(Math.round(day.temperatureMin)));
       forecastTable.append(row);
       weekday = (weekday + 1) % 7;
+      opacity -= 0.1;
     }
 
     $('.forecast').updateWithText(forecastTable, 1000);

@@ -7,7 +7,7 @@ var debug = argv[0] === '--debug';
 
 var server;
 
-console.log('hello!');
+console.log('starting monitor');
 
 var spawnServer = function () {
   server = spawn('node', ['server.js'], {stdio: [0, 1, 2]});
@@ -29,7 +29,7 @@ watchr.watch({
 });
 
 process.on('SIGINT', function() {
-  console.log('exiting...');
+  console.log('monitor exiting...');
   // clean up the server
   server.kill();
   // exit

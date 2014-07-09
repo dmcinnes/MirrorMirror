@@ -36,3 +36,15 @@ wss.on('connection', function (socket) {
     commands.refresh();
   }
 });
+
+process.stdin.resume();
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', function(data) {
+  console.log('got data', data);
+});
+
+process.on('SIGINT', function() {
+  console.log('exiting');
+  // stop the stream so we can exit
+  process.stdin.pause();
+});

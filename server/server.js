@@ -2,6 +2,12 @@ var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({port: 8080});
 var exec = require('child_process').exec;
 
+var sendToClients = function (message) {
+  for (var i in wss.clients) {
+    wss.clients[i].send(message);
+  }
+};
+
 var commands = {
   shutdown: function (socket) {
     exec('sudo shutdown now', function (error, stdout, stderr) {
@@ -14,9 +20,10 @@ var commands = {
     });
   },
   refresh: function () {
-    for (var i in wss.clients) {
-      wss.clients[i].send('refresh');
-    }
+    sendToClients('refresh');
+  },
+  updateViewers: function (count) {
+    sendToClients('viewers=' + count);
   }
 };
 
@@ -41,6 +48,7 @@ process.stdin.resume();
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', function(data) {
   console.log('got data', data);
+  commands.updateViewers(data);
 });
 
 process.on('SIGINT', function() {

@@ -6,10 +6,11 @@ var Connection = (function () {
     onclose:   function (e) {},
     onerror:   function (e) {},
     onmessage: function (msg) {
-      var command = msg.data;
-      console.log(command);
+      var pair = msg.data.split('=');
+      var command = pair[0];
+      console.log(msg.data);
       if (commands[command]) {
-        commands[command].call();
+        commands[command].call(pair[1]);
       }
     }
   };
@@ -17,6 +18,8 @@ var Connection = (function () {
   var commands = {
     refresh: function () {
       window.location.reload();
+    },
+    viewers: function () {
     }
   };
 

@@ -10,7 +10,7 @@ var Connection = (function () {
       var command = pair[0];
       console.log(msg.data);
       if (commands[command]) {
-        commands[command].call(pair[1]);
+        commands[command].call(commands, pair[1]);
       }
     }
   };
@@ -19,7 +19,8 @@ var Connection = (function () {
     refresh: function () {
       window.location.reload();
     },
-    viewers: function () {
+    viewers: function (count) {
+      Mirror.updateViewers(parseInt(count, 10));
     }
   };
 

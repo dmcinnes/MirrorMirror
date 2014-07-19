@@ -85,8 +85,8 @@ $(function () {
       }
 
       row.append($('<td/>').addClass('day').html(moment.weekdaysShort(weekday)));
-      row.append($('<td/>').addClass('temp-max').html(Math.round(day.temperatureMax)));
       row.append($('<td/>').addClass('temp-min').html(Math.round(day.temperatureMin)));
+      row.append($('<td/>').addClass('temp-max').html(Math.round(day.temperatureMax)));
       forecastTable.append(row);
       weekday = (weekday + 1) % 7;
       opacity -= 0.1;

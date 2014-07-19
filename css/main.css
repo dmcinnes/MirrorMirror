@@ -155,10 +155,10 @@ body, html {
 }
 
 .forecast-table .temp-max {
+  padding-left: 10px;
 }
 
 .forecast-table .temp-min {
-  padding-left: 10px;
   color: #555;
 }
 

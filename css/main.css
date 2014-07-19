@@ -229,3 +229,14 @@ body, html {
   font-weight:  200;
 }
 
+.command {
+  display: block;
+  width: 90%;
+  height: 100px;
+  text-decoration: none;
+  font-variant: small-caps;
+  background-color: #999;
+  color: #000;
+  margin: 40px;
+  border-radius: 15px;
+}

@@ -1,5 +1,7 @@
 $(function () {
 
+  var $elements = $('.temp,.wind,.weather-summary,.forecast').hide();
+
   var getLocation = function () {
     var deferred = jQuery.Deferred();
 
@@ -98,18 +100,31 @@ $(function () {
   var getWeatherData = function(lat, long) {
     // use the cached copy if we have it
     if (localStorage.forecast) {
-      var deferred = jQuery.Deferred();
-      deferred.resolve(JSON.parse(localStorage.forecast));
-      return deferred.promise();
+      var forecastTime = parseInt(localStorage.forecastTime, 10);
+      if (forecastTime && isFresh(forecastTime)) {
+        var data = JSON.parse(localStorage.forecast);
+        var deferred = jQuery.Deferred();
+        deferred.resolve(data);
+        return deferred.promise();
+      }
     }
 
     var url = 'https://api.forecast.io/forecast/'+APIKEY+'/'+lat+','+long+'?callback=?';
     var ajax = $.getJSON(url, weatherParams);
     ajax.done(function (weatherData) {
       // cache the response
-      localStorage.forecast = JSON.stringify(weatherData);
+      localStorage.forecast     = JSON.stringify(weatherData);
+      localStorage.forecastTime = moment().unix();
     });
     return ajax;
+  };
+
+  var isFresh = function (time) {
+    if (!time) {
+      return false;
+    }
+    var ageInSeconds = moment().unix() - time;
+    return ageInSeconds < 300; // 5 minutes
   };
 
   var updateWeather = function () {
@@ -122,11 +137,19 @@ $(function () {
     });
   };
 
-  updateWeather();
+  var interval;
 
-  setTimeout(function () {
-    // clear the cache
-    delete localStorage.forecast;
-    updateWeather();
-  }, 360000);
+  Mirror.listen({
+    show: function () {
+      updateWeather();
+      clearInterval(interval);
+      inverval = setInterval(updateWeather, 60 * 5 * 1000); // five minutes
+      $elements.fadeIn(1000);
+    },
+    hide: function () {
+      clearInterval(interval);
+      $elements.fadeOut(1000);
+    }
+  });
+
 });

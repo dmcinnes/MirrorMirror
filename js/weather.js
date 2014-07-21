@@ -128,6 +128,9 @@ $(function () {
   };
 
   var updateWeather = function () {
+    if (!visible) {
+      return;
+    }
     getLocation().then(function (location) {
       var coords = location.coords;
       return getWeatherData(coords.latitude, coords.longitude);
@@ -135,19 +138,20 @@ $(function () {
       renderWeather(weatherData.currently);
       renderForecast(weatherData.daily);
     });
+
+    setTimeout(updateWeather, 60 * 5 * 1000); // five minutes
   };
 
-  var interval;
+  var visible = false;
 
   Mirror.listen({
     show: function () {
+      visible = true;
       updateWeather();
-      clearInterval(interval);
-      inverval = setInterval(updateWeather, 60 * 5 * 1000); // five minutes
       $elements.fadeIn(1000);
     },
     hide: function () {
-      clearInterval(interval);
+      visible = false;
       $elements.fadeOut(1000);
     }
   });

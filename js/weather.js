@@ -47,7 +47,7 @@ $(function () {
     'wi-wind-north-west'
   ];
 
-  var renderWeather = function (currentWeather) {
+  var renderWeather = function (currentWeather, minuteWeather) {
     var temp = Math.round(currentWeather.temperature);
 
     var wind = Math.round(currentWeather.windSpeed);
@@ -71,7 +71,9 @@ $(function () {
       $('.wind').updateWithText('', 1000);
     }
 
-    $('.weather-summary').updateWithText(currentWeather.summary, 1000);
+    // remove ending '.' for consistancy
+    var summary = minuteWeather.summary.replace(/\.$/, '');
+    $('.weather-summary').updateWithText(summary, 1000);
   };
 
   var renderForecast = function (forcast) {
@@ -135,7 +137,7 @@ $(function () {
       var coords = location.coords;
       return getWeatherData(coords.latitude, coords.longitude);
     }).done(function (weatherData) {
-      renderWeather(weatherData.currently);
+      renderWeather(weatherData.currently, weatherData.minutely);
       renderForecast(weatherData.daily);
     });
 

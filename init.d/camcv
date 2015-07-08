@@ -31,7 +31,7 @@ case "$1" in
         fi
         ;;
     *)
-        echo "Usage: service camcv start|stop"
+        echo "Usage: service camcv start|stop|status"
         exit 1
         ;;
 esac

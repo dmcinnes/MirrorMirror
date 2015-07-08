@@ -31,7 +31,7 @@ case "$1" in
         fi
         ;;
     *)
-        echo "Usage: service mirror start|stop"
+        echo "Usage: service mirror start|stop|status"
         exit 1
         ;;
 esac

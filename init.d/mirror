@@ -16,15 +16,15 @@ case "$1" in
     start)
         echo "Starting mirror server"
         cd /home/pi/MirrorMirror/server
-        bash -c "exec -a mirror /usr/bin/nodejs server.js < cam.pipe > /dev/null &"
+        bash -c "exec -a mirrord /usr/bin/nodejs server.js < cam.pipe > /dev/null &"
         ;;
     stop)
         echo "Stopping mirror server"
-        pkill -f mirror
+        pkill -f mirrord
         ;;
     status)
         printf "Checking mirror server..."
-        if [ -z "`pgrep -f mirror`" ]; then
+        if [ -z "`pgrep -f mirrord`" ]; then
             echo "Stopped"
         else
             echo "Running"

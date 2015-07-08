@@ -16,15 +16,15 @@ case "$1" in
     start)
         echo "Starting camcv"
         cd /home/pi/camcv
-        bash -c "exec -a camcv ./camcv others/csv.txt 1 5500 > /home/pi/MirrorMirror/server/cam.pipe 2> /dev/null &"
+        bash -c "exec -a camcvd ./camcv others/csv.txt 1 5500 > /home/pi/MirrorMirror/server/cam.pipe 2> /dev/null &"
         ;;
     stop)
         echo "Stopping camcv"
-        pkill -f camcv
+        pkill -f camcvd
         ;;
     status)
         printf "Checking camcv..."
-        if [ -z "`pgrep -f camcv`" ]; then
+        if [ -z "`pgrep -f camcvd`" ]; then
             echo "Stopped"
         else
             echo "Running"

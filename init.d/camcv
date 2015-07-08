@@ -25,9 +25,9 @@ case "$1" in
     status)
         printf "Checking camcv..."
         if [ -z "`pgrep -f camcv`" ]; then
-            echo "Running"
-        else
             echo "Stopped"
+        else
+            echo "Running"
         fi
         ;;
     *)

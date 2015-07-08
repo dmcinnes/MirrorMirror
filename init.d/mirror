@@ -1,0 +1,31 @@
+#!/bin/bash
+# /etc/init.d/mirror
+
+### BEGIN INIT INFO
+# Provides:          mirror
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Runs the mirror web socket server
+# Description:       Runs the mirror nodejs web socket server controller
+### END INIT INFO
+
+
+case "$1" in
+    start)
+        echo "Starting mirror server"
+        cd /home/pi/MirrorMirror/server
+        bash -c "exec -a mirror /usr/bin/nodejs server.js < cam.pipe &"
+        ;;
+    stop)
+        echo "Stopping mirror server"
+        killall mirror
+        ;;
+    *)
+        echo "Usage: service mirror start|stop"
+        exit 1
+        ;;
+esac
+
+exit 0

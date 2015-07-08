@@ -1,0 +1,39 @@
+#!/bin/bash
+# /etc/init.d/camcv
+
+### BEGIN INIT INFO
+# Provides:          camcv
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Runs the camcv service
+# Description:       Runs the camcv face recognition service
+### END INIT INFO
+
+
+case "$1" in
+    start)
+        echo "Starting camcv"
+        cd /home/pi/camcv
+        bash -c "exec -a camcv ./camcv others/csv.txt 1 5500 > /home/pi/MirrorMirror/server/cam.pipe 2> /dev/null &"
+        ;;
+    stop)
+        echo "Stopping camcv"
+        pkill -f camcv
+        ;;
+    status)
+        printf "Checking camcv..."
+        if [ -z "`pgrep -f camcv`" ]; then
+            echo "Running"
+        else
+            echo "Stopped"
+        fi
+        ;;
+    *)
+        echo "Usage: service camcv start|stop"
+        exit 1
+        ;;
+esac
+
+exit 0

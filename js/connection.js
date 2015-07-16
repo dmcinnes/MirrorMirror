@@ -21,6 +21,12 @@ var Connection = (function () {
     },
     viewers: function (count) {
       Mirror.updateViewers(parseInt(count, 10));
+    },
+    show: function () {
+      Mirror.show();
+    },
+    hide: function () {
+      Mirror.hide();
     }
   };
 

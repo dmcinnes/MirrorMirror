@@ -20,9 +20,9 @@ $(function () {
     toggle.click(function (e) {
       e.preventDefault();
       if (Mirror.isShowing()) {
-        Mirror.hide();
+        Connection.send('hide');
       } else {
-        Mirror.show();
+        Connection.send('show');
       }
     });
 

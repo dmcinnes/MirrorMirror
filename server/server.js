@@ -24,6 +24,12 @@ var commands = {
   },
   updateViewers: function (count) {
     sendToClients('viewers=' + count);
+  },
+  show: function () {
+    sendToClients('show');
+  },
+  hide: function () {
+    sendToClients('hide');
   }
 };
 

@@ -48,6 +48,13 @@ var Mirror = (function () {
 
     listen: function (callbacks) {
       listeners.push(callbacks);
-    }
+    },
+
+    isShowing: function () {
+      return showing;
+    },
+
+    show: show,
+    hide: hide
   };
 })();

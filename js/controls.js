@@ -1,6 +1,7 @@
 $(function () {
   if (/ip(hone|od|ad)/i.test(navigator.userAgent) ||
       window.location.hash === '#controls') {
+
     var shutdown = $('<a/>', {href:'#'}).addClass('command').text('Shut Down');
     shutdown.click(function (e) {
       e.preventDefault();
@@ -8,11 +9,32 @@ $(function () {
         Connection.send('shutdown');
       }
     });
+
     var refresh = $('<a/>', {href:'#'}).addClass('command').text('Refresh');
     refresh.click(function (e) {
       e.preventDefault();
       Connection.send('refresh');
     });
-    $('.bottom').append(shutdown, refresh);
+
+    var toggle = $('<a/>', {href:'#'}).addClass('command').text('Show');
+    toggle.click(function (e) {
+      e.preventDefault();
+      if (Mirror.isShowing()) {
+        Mirror.hide();
+      } else {
+        Mirror.show();
+      }
+    });
+
+    Mirror.listen({
+      show: function () {
+        toggle.text('Hide');
+      },
+      hide: function () {
+        toggle.text('Show');
+      }
+    });
+
+    $('.bottom').append(toggle, refresh, shutdown);
   }
 });
